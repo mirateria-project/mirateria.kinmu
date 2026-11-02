@@ -1,6 +1,6 @@
 /* 勤務表: offline support. Upload once; never needs changing.
    Always fetches the newest index.html when online, so updating only the HTML is enough. */
-const C='sft-app-v162';
+const C='sft-app-v163';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon-512.png','./icon-192.png','./apple-touch-icon.png'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>Promise.all(FILES.map(f=>c.add(new Request(f,{cache:'reload'})).catch(()=>{})))))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
