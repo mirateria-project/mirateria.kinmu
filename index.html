@@ -380,7 +380,7 @@ $('pdc').onclick=()=>{$('pdm').style.display='none'};
 })();
 </script>
 
-<div style="text-align:center;font-size:12px;color:var(--sub);margin:8px 0 24px">Version 1.6.2 (2026-11-03)</div>
+<div style="text-align:center;font-size:12px;color:var(--sub);margin:8px 0 24px">Version 1.6.3 (2026-11-04)</div>
 <script>
 (function(){try{var ed=document.getElementById('ed');if(ed&&window.MutationObserver)new MutationObserver(function(){setTimeout(function(){dispatchEvent(new Event('resize'))},50)}).observe(ed,{attributes:true,attributeFilter:['style']})}catch(e){}
 try{if('serviceWorker' in navigator&&location.protocol=='https:')addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}catch(e){}})();
@@ -575,9 +575,9 @@ function step(t){var dt=Math.min(.05,(t-(lastT||t))/1000);lastT=t;
   var p=-s.k*1.1*(s.ph-phT)-s.c*s.pw;s.pw+=p*dt;s.ph+=s.pw*dt;if(s.ph>75){s.ph=75;s.pw*=-.5}if(s.ph<-75){s.ph=-75;s.pw*=-.5}
   var q=-s.kb*s.b-7*s.bv;s.bv+=q*dt;s.b+=s.bv*dt;if(s.b<-14){s.b=-14;s.bv*=-.4}if(s.b>14){s.b=14;s.bv*=-.4}
   var u=-s.kt*s.tw-s.ct*s.tv;s.tv+=u*dt;s.tw+=s.tv*dt;if(s.tw>540){s.tw=540;s.tv*=-.3}if(s.tw<-540){s.tw=-540;s.tv*=-.3}/* ねじれ */
-  s.el.style.transform='perspective(480px) rotate('+s.th.toFixed(2)+'deg) rotateX('+s.ph.toFixed(2)+'deg) rotateY('+s.tw.toFixed(1)+'deg) translateY('+s.b.toFixed(2)+'px)'});
+  s.el.style.transform='perspective(480px) rotate('+s.th.toFixed(2)+'deg) rotateX('+s.ph.toFixed(2)+'deg) rotateY('+(s.tw+(s.r0||0)).toFixed(1)+'deg) translateY('+s.b.toFixed(2)+'px)'});
  requestAnimationFrame(step)}
-window.sanKit={enable:enableSensor,live:function(){return gotEv},S:S,add:function(el,th){var st={el:el,th:th||0,w:0};els.push(st);return st},open:openShop,kick:kick};
+window.sanKit={enable:enableSensor,live:function(){return gotEv},S:S,add:function(el,th){var st={el:el,th:th||0,w:0,r0:(Math.random()<.5?-1:1)*(12+Math.random()*14)};els.push(st);return st},open:openShop,kick:kick};
 function init(){var b=g('sznb'),im=g('szni');if(!b)return;
  g('sanc').onclick=function(){g('sanm').hidden=true};
  g('sanm').onclick=function(e){if(e.target===this)this.hidden=true};
@@ -593,7 +593,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <style>
 #sanbar{--w:clamp(66px,19vw,94px);position:relative;margin:2px 0 10px;overflow-x:clip;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 #sanbar img.br{position:absolute;left:0;top:0;width:100%;max-width:none;height:auto;z-index:3;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35));-webkit-user-drag:none}
-#sanbar .it{position:absolute;width:0;height:0;transform-origin:0 0;will-change:transform;z-index:2}
+#sanbar .it{position:absolute;width:0;height:0;transform-origin:0 0;will-change:transform;z-index:2;transform-style:preserve-3d;-webkit-transform-style:preserve-3d}
+#sanbar .it img.ly{filter:brightness(.5) saturate(1.3);pointer-events:none}
 #sanbar .it img{position:absolute;top:-3px;width:var(--w);max-width:none;height:auto;left:calc(var(--w) * -.5);cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.35));-webkit-user-drag:none}
 @media print{#sanbar{display:none!important}}
 </style>
@@ -606,7 +607,7 @@ function init(){var K=window.sanKit,h=document.getElementById('h1t');if(!K||!h||
  var br=document.createElement('img');br.className='br';br.src=BR;br.alt='';br.draggable=false;bar.appendChild(br);
  var its=[],els=[],ORDER=[2,5,1,4,7,10,3,6,8,9];
  ORDER.forEach(function(c,i){var it=document.createElement('div');it.className='it';it.style.left=(6+(i+.5)/10*88)+'%';
-  var im=document.createElement('img');im.src=H[c-1];im.alt='';im.draggable=false;it.appendChild(im);
+  var im=document.createElement('img');im.src=H[c-1];im.alt='';im.draggable=false;im.style.transform='translateZ(3.5px)';it.appendChild(im);for(var z=3;z>=-3.5;z-=.5){var ly=document.createElement('img');ly.src=H[c-1];ly.alt='';ly.draggable=false;if(z>-3.5)ly.className='ly';ly.style.transform='translateZ('+z+'px)';it.appendChild(ly)}
   bar.appendChild(it);els.push(it);its.push(K.add(it,0))});
  h.parentNode.insertBefore(bar,h.nextSibling);
  var pr=document.createElement('div');pr.className='n';pr.style.cssText='text-align:right;margin:-6px 4px 8px;font-size:11px;font-weight:700;color:#8a5a2b;cursor:pointer';pr.textContent='【¥350】店舗にて販売中';pr.onclick=function(){K.open()};bar.parentNode.insertBefore(pr,bar.nextSibling);
