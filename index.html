@@ -88,7 +88,7 @@ td,th{padding:5px 4px;border-bottom:1px solid var(--bd);text-align:left}
 <h1 id="h1t" style="cursor:pointer">🗓 ミラテリア勤務表（10:00〜15:00）</h1>
 <div class="row np" style="margin:-4px 0 10px"><button id="stb">✏️ タイトル・時間を変える</button></div>
 <div class="card np" id="stc" style="display:none"><b>✏️ タイトル・標準の時間</b><div class="row" style="margin-top:8px">タイトル<input id="tn" type="text" value="ミラテリア勤務表" maxlength="30" placeholder="例：〇〇勤務表" style="flex:1;min-width:140px"></div><label class="row" style="margin-top:8px;cursor:pointer"><input id="sht" type="checkbox" checked style="width:22px;height:22px">タイトルに時間を出す</label><div class="row" style="margin-top:8px">出勤<input id="st" type="time" value="10:00">退勤<input id="et" type="time" value="15:00"></div><div class="n" style="margin-top:6px">ここで決めた時間が、毎日の標準になります（日によって違う日は「⏱ 出勤・退勤時間」で変えられます）。入力はこの端末に自動保存されます。</div><button class="p" id="stok" style="margin-top:8px">閉じる</button></div>
-<div class="row np" style="margin-bottom:10px"><button id="hsb">📱 ホーム画面に追加する方法（説明）</button><button class="p" onclick="saveShot()">📸 画面全体を画像で保存</button></div>
+<div class="row np" style="margin-bottom:10px"><button id="hsb">📱 ホーム画面に追加する方法（説明）</button><button class="p shotb" onclick="saveShot()">📸 画面全体を画像で保存</button></div>
 <div id="home"></div>
 <div id="ed" style="display:none">
 
@@ -167,7 +167,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <div class="n np">早退・遅刻・欠勤などの日と理由をメモできます（月ごとに、この端末に自動保存）。印刷/PDFにも載ります。</div>
 <textarea id="nt" class="np" rows="4" placeholder="例: 9/25 体調不良のため13:00に早退"></textarea>
 <div id="ntp"></div></div>
-<div class="row np"><button class="p" onclick="savePDF()">🖨 印刷 / PDF保存</button><button class="p" onclick="saveShot()">📸 画面全体を画像で保存</button></div>
+<div class="row np"><button class="p" onclick="savePDF()">🖨 印刷 / PDF保存</button><button class="p shotb" onclick="saveShot()">📸 画面全体を画像で保存</button></div>
 </div></div>
 <script>
 const $=id=>document.getElementById(id),W=['日','月','火','水','木','金','土'];
@@ -249,7 +249,7 @@ let rows='',yt=0,yc=0,yh=0;
 for(let m=0;m<12;m++){const r=calc(HY,m);yt+=r.tot;yc+=r.c;yh+=r.th;const cur=HY===now.getFullYear()&&m===now.getMonth();
 rows+=`<div class="mc yr${cur?' cur':''}" data-y="${HY}" data-m="${m}"><b>${m+1}月</b><span>${r.c?r.c+'日':'—'}</span><span class="yrp">${r.c?yen(r.tot):'—'}</span><span class="yra">›</span></div>`}
 let h=`<div class="card"><div class="row nav"><button id="hyp" aria-label="前の年">◀</button><b style="font-size:18px">${HY}年</b><button id="hyn" aria-label="次の年">▶</button></div><div class="ytot"><span>${HY}年　年間の手取り見込み</span><b>${yen(yt)}</b><small>出勤 ${yc}日・${Math.round(yh*100)/100}時間</small></div></div><div class="card"><div class="yrh"><span>月</span><span>出勤</span><span style="text-align:right">手取り見込み</span><span></span></div>${rows}<div class="n" style="margin-top:6px">月をタップすると、その月の表を開きます。</div></div>`;
-h+='<div class="row np"><button class="p" onclick="savePDF()">🖨 印刷 / PDF保存</button><button class="p" onclick="saveShot()">📸 画面全体を画像で保存</button></div>';
+h+='<div class="row np"><button class="p" onclick="savePDF()">🖨 印刷 / PDF保存</button><button class="p shotb" onclick="saveShot()">📸 画面全体を画像で保存</button></div>';
 $('home').innerHTML=h;$('hyp').onclick=e=>{e.stopPropagation();HY--;renderHome()};$('hyn').onclick=e=>{e.stopPropagation();HY++;renderHome()}}
 function show(v){$('home').style.display=v=='home'?'':'none';$('ed').style.display=v=='home'?'none':'';if(v=='home')renderHome();else render()}
 $('home').onclick=e=>{const c=e.target.closest('.mc');if(!c)return;Y=+c.dataset.y;M=+c.dataset.m;setm(1);show('ed');scrollTo(0,0)};
@@ -287,7 +287,8 @@ if(ac.state==='suspended')ac.resume();var t=ac.currentTime,o=ac.createOscillator
 o.type='sine';o.frequency.value=1800;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.25,t+0.005);
 g.gain.exponentialRampToValueAtTime(0.0001,t+0.07);o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+0.08)}catch(e){}}
 document.addEventListener('pointerdown',function(e){var el=e.target.closest&&e.target.closest('button,select,input,label,a,[role=button],.d:not(.e),.mc,[onclick]');
-if(el&&!el.disabled)beep()},true);
+if(el&&!el.disabled&&!el.classList.contains('shotb'))beep()},true);
+document.addEventListener('touchend',function(){try{if(ac&&ac.state!=='running')ac.resume()}catch(e){}},true);window.kinmuBeep=beep;
 })();
 </script>
 <style>
@@ -315,10 +316,10 @@ button:active{transform:translateY(1px);filter:brightness(.9)}
 <div id="ssm" class="mdl np"><div class="bx2">
 <b style="font-size:17px">📸 画面全体を画像で保存</b>
 <div id="ssmsg" class="n" style="font-size:14px;color:var(--tx);margin:8px 0">画像を作っています…</div>
-<button class="p big" id="sssh" style="display:none">📤 保存する・送る（共有画面を開く）</button>
 <style>.ssld{display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:-2px;border:2px solid var(--ac);border-top-color:transparent;border-radius:50%;animation:ssr .8s linear infinite}@keyframes ssr{to{transform:rotate(360deg)}}</style>
 <div class="n" id="sshint" style="display:none;font-size:12px;margin-top:8px">📱 画像を<b>長押し</b>で保存できます。iPhoneは「写真に追加」、Androidは「画像をダウンロード」を選んでね</div>
 <img id="ssim" alt="画面全体の画像" style="display:none;width:100%;height:auto;border:1px solid var(--bd);border-radius:8px;margin-top:8px">
+<button class="p big" id="sssh" style="display:none">📤 保存する・送る（共有画面を開く）</button>
 <button class="big" id="ssc">閉じる</button>
 </div></div>
 <script>
@@ -449,7 +450,8 @@ async function shotContent(){/* 予備：PDFと同じ中身を縦に1枚につ�
  return await new Promise((ok,ng)=>c.toBlob(b=>b?ok(b):ng(new Error('blob')),'image/jpeg',.9))}
 let SF=null,SU=null;
 window.saveShot=async function(){
- const m=$('ssm');m.style.display='block';$('ssmsg').innerHTML='<span class="ssld"></span>画像を作っています。数秒かかります…';['sssh','sshint','ssim'].forEach(i=>$(i).style.display='none');
+ try{window.kinmuBeep&&kinmuBeep()}catch(e){}/* タップ（click）の中で鳴らすとiPhoneでも確実に鳴る */
+ const m=$('ssm');m.style.display='block';m.scrollTop=0;$('ssmsg').innerHTML='<span class="ssld"></span>画像を作っています。数秒かかります…';['sssh','sshint','ssim'].forEach(i=>$(i).style.display='none');
  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));await wait(350);/* 先に表示と「ピッ」を出してから重い作業 */
  const ed=$('ed').style.display!=='none',nm=(TTL()+'_'+(ed?Y+'年'+(M+1)+'月':HY+'年')+'_画面.jpg').replace(/[\\/:*?"<>|\s]/g,'');
  let b=null,how='';
@@ -457,8 +459,8 @@ window.saveShot=async function(){
  if(!b){try{b=await shotContent();how='content'}catch(e){}}
  if(!b){$('ssmsg').textContent='画像を作れませんでした。「🖨 印刷 / PDF保存」を使ってください。';return}
  SF=new File([b],nm,{type:'image/jpeg'});if(SU)URL.revokeObjectURL(SU);SU=URL.createObjectURL(b);
- const im=$('ssim');im.src=SU;im.style.display='block';
- $('ssmsg').textContent='✅ 画面全体の画像ができました'+(how==='content'?'（この端末では表と同じ中身を1枚にしました）':'')+'。下のボタンで保存・送信できます。';
+ const im=$('ssim');im.src=SU;im.style.display='block';m.scrollTop=0;
+ $('ssmsg').textContent='✅ 画面全体の画像ができました'+(how==='content'?'（この端末では表と同じ中身を1枚にしました）':'')+'。';
  $('sssh').style.display='block';$('sshint').style.display='block'};
 $('sssh').onclick=()=>{if(!SF)return;
  const viaDL=()=>{if(DL){DL.save({filename:SF.name,data:SF}).then(()=>{$('ssmsg').textContent='✅ 保存画面に渡しました。'}).catch(()=>{$('ssmsg').textContent='保存できませんでした。上の画像を長押しして「写真に追加」を選んでください。'});return true}return false};
@@ -471,7 +473,7 @@ $('ssm').onclick=e=>{if(e.target.id==='ssm')$('ssm').style.display='none'};
 })();
 </script>
 
-<div style="text-align:center;font-size:12px;color:var(--sub);margin:8px 0 24px">Version 1.8.2 (2026-11-05)</div>
+<div style="text-align:center;font-size:12px;color:var(--sub);margin:8px 0 24px">Version 1.8.3 (2026-11-05)</div>
 <script>
 (function(){try{var ed=document.getElementById('ed');if(ed&&window.MutationObserver)new MutationObserver(function(){setTimeout(function(){dispatchEvent(new Event('resize'))},50)}).observe(ed,{attributes:true,attributeFilter:['style']})}catch(e){}
 try{if('serviceWorker' in navigator&&location.protocol=='https:')addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}catch(e){}})();
